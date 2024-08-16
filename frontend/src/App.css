@@ -1,0 +1,10 @@
+/* Hide scrollbar while keeping the ability to scroll */
+.hidden-scrollbar {
+    overflow: -moz-scrollbars-none; /* For older Firefox versions */
+    scrollbar-width: none; /* For modern Firefox */
+  }
+  
+  .hidden-scrollbar::-webkit-scrollbar {
+    display: none; /* For Webkit browsers */
+  }
+  
