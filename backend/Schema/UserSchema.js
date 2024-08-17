@@ -4,6 +4,7 @@ const UserSchema = new mongoose.Schema({
     password:{type:String,required:true},
     name:{type:String ,required:true},
     age:{type:Number,required:true},
-    phoneNumber:{type:String}
+    image:{type:String ,default:null},
+    phoneNumber:{type:String,default:null}
 })
 export default mongoose.model('User',UserSchema)

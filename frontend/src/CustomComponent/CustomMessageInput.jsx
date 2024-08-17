@@ -191,7 +191,7 @@ const CustomMessageInput = ({ theme }) => {
               : "focus:outline-none"
           }`}
           onChange={handleChange}
-          placeholder="Type your message... or You can see any Link Preview by writing down here"
+          placeholder="Type your message..."
         />
         <button
           type="button"

@@ -8,3 +8,19 @@
     display: none; /* For Webkit browsers */
   }
   
+  /* Hide the spinner in Chrome, Safari, and Edge */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Optionally, to remove the spinner in Internet Explorer */
+input[type="number"] {
+    -ms-appearance: textfield;
+}
