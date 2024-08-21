@@ -166,6 +166,14 @@ const CustomMessageInput = ({ theme }) => {
     }
   }, [text, textareaRef]);
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleSubmit(); 
+    }
+  };
+
+
   return (
     <div className="w-full ">
       <CustomLinkPreviewList />
@@ -177,7 +185,7 @@ const CustomMessageInput = ({ theme }) => {
           <FileAttachmentPreview key={id} id={id} />
         ))}
       </div>
-      <div className="w-full flex p-2 relative items-center">
+      <div className="w-full flex p-2 relative  items-center">
         <div className="flex absolute bottom-[22px] left-4 z-50 ">
           <AttachmentUploadButton />
         </div>
@@ -190,6 +198,7 @@ const CustomMessageInput = ({ theme }) => {
               ? "bg-black bg-opacity-25 border-2 border-white border-opacity-20 text-white focus:outline-none"
               : "focus:outline-none"
           }`}
+          onKeyDown={handleKeyDown}
           onChange={handleChange}
           placeholder="Type your message..."
         />

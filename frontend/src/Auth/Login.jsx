@@ -1,12 +1,12 @@
 import { useState } from "react";
-import {  FaMessage } from "react-icons/fa6";
+import { FaMessage } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import ReactLoading from "react-loading";
 import Error from "../utils/Error";
 import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
 const Login = () => {
-  const {dispatch} = useContext(AuthContext)
+  const { dispatch } = useContext(AuthContext);
   const naviagte = useNavigate();
   const [input, setInput] = useState({
     email: "",
@@ -16,7 +16,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const handleInput = (e) => {
     e.preventDefault();
-    setError('')
+    setError("");
     setInput({ ...input, [e.target.name]: e.target.value });
   };
   const handleLogin = async () => {
@@ -45,26 +45,33 @@ const Login = () => {
           type: "LOGIN",
           payload: {
             token: result.token,
-            userData: result.data
-          }
-        });        
-        naviagte('/chatapp')
+            userData: result.data,
+          },
+        });
+        naviagte("/chatapp");
       } else {
         setLoading(false);
         setError(result.message);
       }
     } catch (error) {
-      console.log(error);
-      setError("check console");
+      setError(error.message);
+      setLoading(false);
     }
   };
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevents the default form submission if it's inside a form
+      handleLogin(); // Calls the handleSubmit function
+    }
+  };
+  
   return (
     <div className="w-full flex items-center justify-center min-h-screen bg-blue-600">
       {loading && !error && <ReactLoading />}
       {!loading && (
         <div>
           {error && <Error errormessage={error} />}
-          <div className=" p-3 rounded-xl bg-white text-black">
+          <div className=" p-3 rounded-xl bg-white text-black border-2 shadow-sm shadow-black border-black">
             <h1 className="flex gap-2 items-center justify-center p-2 px-10 py-4 border-2 border-black font-bold font-mono text-xl bg-blue-200 rounded-lg border-opacity-10 ">
               <FaMessage className="text-2xl text-blue-600" />
               Welcome back to Streamline
@@ -96,6 +103,7 @@ const Login = () => {
                   value={input.password}
                   name="password"
                   onChange={handleInput}
+                  onKeyDown={handleKeyDown}
                 />
               </label>
             </div>
@@ -109,7 +117,7 @@ const Login = () => {
             </div>
             <div className="flex w-full justify-end p-2 text-black font-medium  ">
               <h1>
-                Do you just landed here ?,then {' '} 
+                Do you just landed here ?,then{" "}
                 <button
                   className="text-blue-700 font-bold hover:underline"
                   onClick={() => naviagte("/register")}
