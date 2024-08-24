@@ -79,11 +79,12 @@ router.post("/login", async (req, res) => {
     // Send response
     const data = {
       id: user.id,
-      username :user.username,
+      name :user.username,
       email: user.email,
-      name: user.name,
+      username: user.name,
       age: user.age,
       phoneNumber: user.phoneNumber,
+      image : user.image ? user.image : ""
     };
     res.status(200).json({ data, token });
   } catch (error) {

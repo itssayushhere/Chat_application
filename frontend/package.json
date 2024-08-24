@@ -10,11 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@stream-io/video-react-sdk": "^1.2.21",
     "antd": "^5.20.1",
     "jsonwebtoken": "^9.0.2",
     "jwt-simple": "^0.5.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-draggable": "^4.4.6",
     "react-file-utils": "^1.2.0",
     "react-icons": "^5.3.0",
     "react-loading": "^2.0.3",

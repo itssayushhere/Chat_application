@@ -4,10 +4,8 @@ import ReactLoading from "react-loading";
 import uploadCloudinary from "../utils/uploadCloudinary";
 import { useNavigate } from "react-router-dom";
 import Error from "../utils/Error";
-import deafultimage from "../assets/image/default.png";
 import { BiSolidShow } from "react-icons/bi";
 import { BiSolidHide } from "react-icons/bi";
-
 const Register = () => {
   const navigate = useNavigate();
   const [imageLoading, setImageLoading] = useState(false);
@@ -19,11 +17,11 @@ const Register = () => {
     email: "",
     password: "",
     confirm: "",
-    image: image,
+    image: image || '',
     age: "",
     phoneNumber: "",
     username: "",
-    bio: ""
+    bio: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -93,9 +91,9 @@ const Register = () => {
             phoneNumber: input.phoneNumber.trim()
               ? input.phoneNumber.trim()
               : "",
-            image: input.image ? input.image : deafultimage,
+            image: input.image ,
             bio: input.bio ? input.bio.trim() : "",
-            username: input.username.trim().toLowerCase()
+            username: input.username.trim().toLowerCase(),
           }),
         }
       );
@@ -116,7 +114,6 @@ const Register = () => {
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
-
 
   return (
     <div className="bg-blue-500 w-full min-h-screen flex items-center justify-center">

@@ -9,17 +9,16 @@ import {
   addMembersToChannel,
   updateimageChannel,
 } from "./Functions/ChannelEdit.jsx";
-
-export default function ChannelInfo({ close, user, data, reloadheader }) {
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { Dropdown, Space } from "antd";
+export default function ChannelInfo({ close, user, data }) {
   const { channel } = useChannelStateContext();
   const channelMembers = Object.values(channel?.state?.members || {});
-
   // Finding who's not members and add to members functions
   const newdata = channelMembers.map((item) => item.user.id);
   const notmembers = data.filter((item) => !newdata.includes(item.id));
   const [selectedMembers, setSelectedMembers] = useState([]);
   const [adding, setAdding] = useState(false);
-
   // Handle Image
   const [imageLoading, setImageLoading] = useState(false);
   const handleImage = async (e) => {
@@ -29,6 +28,7 @@ export default function ChannelInfo({ close, user, data, reloadheader }) {
     await updateimageChannel(channel, data.url);
     setImageLoading(false);
   };
+
   // Handle Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const membersPerPage = 3;
@@ -42,6 +42,41 @@ export default function ChannelInfo({ close, user, data, reloadheader }) {
       setCurrentPage(currentPage + 1);
     }
   };
+  ////Kickout Members
+  const [removing, setRemoving] = useState(false);
+  const handleKickoutMembers = async (kickingout) => {
+    const result = window.confirm("Are You Really Sure?");
+    try {
+      if (result) {
+        await channel.removeMembers([kickingout]);
+        alert("successfull");
+      } else {
+        return null;
+      }
+    } catch (error) {
+      alert("Unsuccessfull", error);
+    }
+  };
+
+  const avatar = (username) => {
+    // Trim any extra spaces and split the username
+    const split = username.trim().split(" ");
+
+    // Extract initials
+    let name;
+    if (split.length === 1) {
+      name = split[0][0].toUpperCase();
+    } else {
+      const [firstName, lastName] = split;
+      name = firstName[0].toUpperCase() + lastName[0].toUpperCase();
+    }
+
+    return (
+      <div className="w-9 h-9 border border-black flex items-center justify-center rounded-full bg-blue-900">
+        {name}
+      </div>
+    );
+  };
 
   // Add members
   const handleAddMembers = async () => {
@@ -52,37 +87,140 @@ export default function ChannelInfo({ close, user, data, reloadheader }) {
       setAdding(false);
     }
   };
-  // Check if the current user is the owner
+  const handleleaveChannel = async () => {
+    const result = window.confirm("Are You Really Sure?");
+    try {
+      if (result) {
+        await channel.removeMembers([user]);
+        console.log("successfull");
+        window.location.reload();
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log("Unsuccessfull", error);
+    }
+  };
+
   const isOwner = channelMembers.find((m) => m.role === "owner");
+  const deleteChannel = async (channelId) => {
+    if (isOwner.user_id !== user) {
+      return;
+    }
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this channel Because this action is not reversible?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/channel/delete/${channelId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        alert("Channel deleted successfully");
+        window.location.reload();
+      } else {
+        const errorData = await response.json();
+        alert(`Failed to delete channel: ${errorData.message}`);
+      }
+    } catch (err) {
+      console.error("Error deleting channel:", err);
+      alert("An error occurred while trying to delete the channel");
+    }
+  };
+  // Check if the current user is the owner
+
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  const handlePopup = () => {
+    return (
+      <div>
+        {isOwner?.user_id !== user && (
+          <button
+            className="w-full bg-red-600 p-2 text-white rounded"
+            onClick={() => {
+              handleleaveChannel();
+              setDropdownVisible(false); // Close the dropdown
+            }}
+          >
+            Leave
+          </button>
+        )}
+        {isOwner?.user_id === user && (
+          <div className="flex flex-col p-1 bg-black rounded">
+            <button
+              className="w-fit bg-gray-600 p-2 text-white rounded mb-2 mx-auto"
+              onClick={() => {
+                deleteChannel(channel?.data?.id);
+                setDropdownVisible(false); 
+              }}
+            >
+              Delete Channel🗑️
+            </button>
+            <button
+              className="w-fit p-2 text-white rounded bg-red-600 mx-auto"
+              onClick={() => {
+                setRemoving(true);
+                setDropdownVisible(false); 
+              }}
+            >
+              KickOut Members
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="absolute inset-0 flex items-center justify-center bg-black opacity-65 text-transparent">
         hello
       </div>
-      <div className="bg-gray-950 bg-opacity-90 text-white p-2 rounded shadow-lg border-2 w-fit border-opacity-50 border-white z-50 overflow-y-scroll hidden-scrollbar relative h-fit">
-        <div className="h-fit relative ">
-          <div className="h-0 sticky top-2 z-50 flex items-center justify-end">
+      <div className="bg-gray-950 bg-opacity-90 text-white p-2 rounded-xl shadow-lg border-2 shadow-black w-full border-opacity-10 border-white z-50 overflow-y-scroll hidden-scrollbar relative h-fit  max-w-sm ">
+        <div className="h-fit">
+          <div className="text-xl flex flex-row items-center justify-between py-2 px-4 font-bold font-mono text-white mb-3  rounded-xl bg-blue-500  text-center ">
+            <Dropdown
+              trigger={["click"]}
+              open={dropdownVisible}
+              onOpenChange={(flag) => setDropdownVisible(flag)}
+              dropdownRender={handlePopup}
+            >
+              <button onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <BsThreeDotsVertical className="text-black" />
+                </Space>
+              </button>
+            </Dropdown>
+            <div className="flex flex-col">
+              <h1 className="text-center font-bold font-mono text-black">
+                {channel?.data?.name}
+              </h1>
+              <h1 className="text-xs p-[2px]">
+                {channel.data.type === "team"
+                  ? "Public Channel"
+                  : "Private Channel"}
+              </h1>
+            </div>
             <button
               onClick={() => close()}
-              className="text-red-600 text-lg bg-white border-black border rounded"
+              className="text-red-700 font-extrabold text-2xl "
             >
               <IoCloseCircleOutline />
             </button>
           </div>
-          <div className="text-xl flex flex-col items-center justify-center py-2 px-20 font-bold font-mono text-gray-100 mb-3 border rounded-xl bg-black bg-opacity-40">
-            {channel?.data?.name}
-            <h1 className="text-xs border p-[2px] rounded-lg bg-black">
-              Type: {channel.data.type === "team" ? "Public" : "Private"}
-            </h1>
-          </div>
           <div
             className={`${
               isOwner?.user_id === user
-                ? "h-[560px] overflow-y-scroll hidden-scrollbar"
+                ? "h-[530px]   overflow-y-scroll hidden-scrollbar"
                 : "h-fit"
             }`}
           >
-            <div className="w-[200px] h-[260px] flex items-center justify-center mx-auto overflow-clip border rounded">
+            <div className="w-[200px] h-[240px] flex items-center justify-center mx-auto overflow-clip bg-black rounded-lg">
               <div>
                 {channel.data.image ? (
                   <div>
@@ -97,7 +235,7 @@ export default function ChannelInfo({ close, user, data, reloadheader }) {
                         />
                         <div>
                           {isOwner?.user_id === user && (
-                            <div className="relative w-full h-10 mx-auto">
+                            <div className="relative w-full h-7 mx-auto">
                               <input
                                 type="file"
                                 name="photo"
@@ -110,9 +248,7 @@ export default function ChannelInfo({ close, user, data, reloadheader }) {
                                 htmlFor="customFile"
                                 className="absolute top-0 left-0 w-full h-full flex items-center px-[0.75rem] py-[0.375rem] text-[15px] leading-6 bg-gray-900 bg-opacity-70 text-headingColor font-semibold rounded-lg text-center cursor-pointer justify-center"
                               >
-                                <h1 className="w-full  opacity-80">
-                                  Change Image
-                                </h1>
+                                <h1 className="w-full  opacity-80">Change</h1>
                               </label>
                             </div>
                           )}
@@ -156,7 +292,14 @@ export default function ChannelInfo({ close, user, data, reloadheader }) {
                 )}
               </div>
             </div>
-
+            <div className="flex items-center gap-1">
+              <h1 className=" italic font-mono font-normal opacity-80">
+                Description:
+              </h1>
+              <h1 className="text-wrap italic font-mono font-normal opacity-80">
+                {channel?.data?.description || "No Description"}
+              </h1>
+            </div>
             <div className="flex flex-col w-full h-fit">
               <h1 className="font-semibold">Members:</h1>
               <div className="flex flex-col w-full h-[190px] items-center justify-center m-auto">
@@ -164,41 +307,55 @@ export default function ChannelInfo({ close, user, data, reloadheader }) {
                   currentMembers.map((m) => (
                     <div
                       key={m.user_id}
-                      className="w-full border rounded-xl bg-black bg-opacity-90 px-2 py-1 flex items-center justify-between my-1"
+                      className="w-full  rounded-xl bg-black bg-opacity-90 px-2 py-1 flex items-center justify-between my-1"
                     >
                       <div className="flex gap-2 items-center">
                         <div>
-                          <img
-                            src={
-                              m.user.image
-                                ? m.user.image
-                                : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQttE9sxpEu1EoZgU2lUF_HtygNLCaz2rZYHg&s"
-                            }
-                            alt="User_image"
-                            width={30}
-                            height={30}
-                            className="w-30 h-fit object-cover rounded-full"
-                          />
+                          {m.user.image && (
+                            <img
+                              src={m.user.image}
+                              alt="User_image"
+                              width={30}
+                              height={30}
+                              className="w-30 h-30 object-cover overflow-hidden rounded-lg"
+                            />
+                          )}
+                          {!m.user.image && avatar(m.user.username)}
                         </div>
-                        <div className="flex flex-col">
-                          <h1>{m.user.name}</h1>
+                        <div className="flex flex-col ">
+                          <h1 className="w-44 text-sm">{m?.user?.username}</h1>
                           <div className="flex flex-wrap text-[10px] items-center justify-between w-full">
-                            <div>
-                              {m.role === "owner" && (
-                                <h6 className="text-white font-mono font-light bg-green-700 rounded-lg px-1">
-                                  admin
-                                </h6>
-                              )}
-                            </div>
-                            <h6>~{m.user.username}</h6>
+                            <h6 className="ml-3">~{m.user.name}</h6>
                           </div>
                         </div>
                       </div>
-                      {m.user_id === user ? (
-                        "(Yourself)"
-                      ) : (
-                        <h1>{m.user.online ? "(Online)" : "(Offline)"}</h1>
-                      )}
+                      <div className="flex  items-center">
+                        <div>
+                          {m.role === "owner" && (
+                            <h6 className="text-white font-mono font-light bg-green-700 rounded-lg px-1 text-xs">
+                              admin
+                            </h6>
+                          )}
+                        </div>
+                        <div>
+                          {m.role !== "owner" && removing && (
+                            <button
+                              type="button"
+                              className="text-white px-2 rounded-lg bg-red-600"
+                              onClick={() => handleKickoutMembers(m.user_id)}
+                            >
+                              Kick
+                            </button>
+                          )}
+                        </div>
+                        <div className="px-2">
+                          {m.user_id === user ? (
+                            "You"
+                          ) : (
+                            <h1>{m.user.online ? "🟢" : " ⚪️"}</h1>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   ))}
               </div>
@@ -237,19 +394,30 @@ export default function ChannelInfo({ close, user, data, reloadheader }) {
                   />
                 )}
                 <div className="mt-2 flex items-center gap-2">
-                  {adding ? (
+                  {!removing && adding ? (
                     <button
-                      className="w-full bg-green-500 p-2 rounded"
+                      className="w-full bg-blue-500 p-2 rounded text-black font-bold"
                       onClick={handleAddMembers}
                     >
-                      Saving
+                      Save
                     </button>
                   ) : (
+                    !removing && (
+                      <button
+                        className="w-full bg-green-500 p-2 rounded text-black font-bold"
+                        onClick={() => setAdding(true)}
+                      >
+                        Add Members
+                      </button>
+                    )
+                  )}
+                  {removing && (
                     <button
-                      className="w-full bg-green-500 p-2 rounded"
-                      onClick={() => setAdding(true)}
+                      type="button"
+                      className="w-full bg-blue-500 p-2 rounded text-black font-bold"
+                      onClick={() => setRemoving(false)}
                     >
-                      Add Members
+                      Save
                     </button>
                   )}
                 </div>

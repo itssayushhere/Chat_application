@@ -148,7 +148,7 @@ const FileAttachmentPreview = ({ id }) => {
 };
 
 // CustomMessageInput component
-const CustomMessageInput = ({ theme }) => {
+const CustomMessageInput = () => {
   const {
     text,
     handleChange,
@@ -193,11 +193,7 @@ const CustomMessageInput = ({ theme }) => {
           rows={1}
           value={text}
           ref={textareaRef}
-          className={`w-full p-3 px-10 rounded-lg hidden-scrollbar ${
-            theme === "messaging dark"
-              ? "bg-black bg-opacity-25 border-2 border-white border-opacity-20 text-white focus:outline-none"
-              : "focus:outline-none"
-          }`}
+          className={`w-full p-3 px-10 rounded-lg hidden-scrollbar bg-black bg-opacity-25 border-2 border-white border-opacity-20 text-white focus:outline-none`}
           onKeyDown={handleKeyDown}
           onChange={handleChange}
           placeholder="Type your message..."

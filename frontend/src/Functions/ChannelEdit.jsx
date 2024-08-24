@@ -40,10 +40,8 @@ export const addMembersToChannel = async (channel,userIds) => {
 
 // Function to remove members from the channel
 export const removeMembersFromChannel = async (userIds,channel) => {
-  
-
   try {
-    await channel.removeMembers(userIds);
+    await channel.removeMembers([userIds]);
     console.log('Members removed successfully');
   } catch (error) {
     console.error('Error removing members:', error);

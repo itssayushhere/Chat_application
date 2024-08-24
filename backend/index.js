@@ -4,6 +4,8 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser'
 import userRoute from "./Routes/user.js";
+import channelRoute from "./Routes/channel.js";
+
 
 dotenv.config()
 const app = express()
@@ -27,6 +29,7 @@ app.use(cors(corsoption))
 app.use(cookieParser())
 app.use(express.json())
 app.use('/user',userRoute)
+app.use('/channel',channelRoute)
 app.listen(port,()=>{
     connnectdb()
     console.log("Server running on port "+port)

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import uploadCloudinary from "../utils/uploadCloudinary";
 import ReactLoading from "react-loading";
 import InputMembers from "../Component/InputMembers"; // Import the InputMembers component
@@ -8,27 +8,48 @@ const CreateChannel = ({ client, userId, close }) => {
   const [channelName, setChannelName] = useState("");
   const [selectedMembers, setSelectedMembers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
-  const [fetchChannel, setFetchChannel] = useState([]);
   const [imageLoading, setImageLoading] = useState(false);
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
   const [channelType, setChannelType] = useState("messaging");
+  // const { state} = useContext(AuthContext);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if(selectedMembers.length === 0){
+      return alert("Please select members")
+    }
+    const channelData = {
+      userId: userId,
+      channelType: channelType,
+      channelName: channelName,
+      channelImage: image ,
+      channelMembers: selectedMembers,
+      channelDescription: description,
+    };
 
-  // Create Channel Function
-  const createChannel = async () => {
-    const channel = client.channel(
-      channelType,
-      `${userId}_${channelType}_${fetchChannel.length + 1}`,
-      {
-        name: channelName,
-        members: [...selectedMembers, userId],
-        image: image ? image : "",
-        description: description ? description : "",
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/channel/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(channelData),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to create channel");
       }
-    );
-    await channel.create();
-    window.location.reload();
-    close();
+
+      const data = await response.json();
+      console.log(data);
+      alert("Channel created successfully!");
+      window.location.reload()
+    } catch (error) {
+      console.error("Error creating channel:", error);
+      alert("Failed to create channel.");
+    }
   };
 
   // Effect Hook for Fetching Users
@@ -37,10 +58,6 @@ const CreateChannel = ({ client, userId, close }) => {
       try {
         const { users } = await client.queryUsers({});
         const user = users.filter((item) => item.id !== userId);
-        const channel = await client.queryChannels({
-          members: { $in: [userId] },
-        });
-        setFetchChannel(channel);
         setAllUsers(user);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -50,7 +67,7 @@ const CreateChannel = ({ client, userId, close }) => {
     if (client) {
       getAllUsers();
     }
-  }, [client]);
+  }, [client, userId]);
 
   // Handle Image Upload
   const handleImage = async (e) => {
@@ -80,12 +97,14 @@ const CreateChannel = ({ client, userId, close }) => {
       </div>
 
       {/* Render InputMembers Component */}
-      <InputMembers
-        allUsers={allUsers}
-        selectedMembers={selectedMembers}
-        setSelectedMembers={setSelectedMembers}
-      />
-
+      <div className="">
+        Channel Members:
+        <InputMembers
+          allUsers={allUsers}
+          selectedMembers={selectedMembers}
+          setSelectedMembers={setSelectedMembers}
+        />
+      </div>
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">
           Channel Description
@@ -155,7 +174,7 @@ const CreateChannel = ({ client, userId, close }) => {
         </button>
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 w-full"
-          onClick={createChannel}
+          onClick={handleSubmit}
         >
           Create Channel
         </button>

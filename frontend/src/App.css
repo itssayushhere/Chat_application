@@ -25,3 +25,12 @@ input[type="number"] {
     -ms-appearance: textfield;
 }
 
+.draggable-box {
+  width: 230px;
+  height:fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: move;
+  position: fixed;
+}
