@@ -117,7 +117,7 @@ const ImageAttachmentPreview = ({ id }) => {
   const url = image.previewUri ?? image.url ?? "fallback.webm";
 
   return (
-    <div className="w-fit flex flex-col items-center  justify-center border-2 border-black p-2">
+    <div className="w-fit flex flex-col items-center  justify-center border-2 border-black p-2 bg-black rounded">
     {/* <div
       className="w-full  "
       style={{
@@ -143,7 +143,7 @@ const FileAttachmentPreview = ({ id }) => {
   const attachment = fileUploads[id];
 
   return (
-    <div className="p-2">
+    <div className="p-2 bg-black border-2 border-black rounded">
       📄 {attachment.file.name} <br />({attachment.file.size} bytes)
       <AttachmentActions attachment={attachment} type="file" />
     </div>
@@ -178,7 +178,7 @@ const CustomMessageInput = () => {
 
 
   return (
-    <div className="w-full bg-black  rounded">
+    <div className="w-full  rounded">
       <CustomLinkPreviewList />
       <div className=" flex   gap-4 ">
         {Object.keys(imageUploads).map((id) => (
@@ -196,7 +196,7 @@ const CustomMessageInput = () => {
           rows={1}
           value={text}
           ref={textareaRef}
-          className={`w-full p-3 px-10 rounded-lg hidden-scrollbar bg-black bg-opacity-100  text-white  focus:outline-none`}
+          className={`w-full p-3 px-10 rounded-lg hidden-scrollbar bg-black bg-opacity-40  text-white  focus:outline-none`}
           onKeyDown={handleKeyDown}
           onChange={handleChange}
           placeholder="Type your message..."

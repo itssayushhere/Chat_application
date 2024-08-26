@@ -6,7 +6,6 @@ import {
   ChannelList,
   Window,
   ChannelHeader,
-  MessageList,
   MessageInput,
   Thread,
   useCreateChatClient,
@@ -18,6 +17,7 @@ import { FaVideo } from "react-icons/fa6";
 import ReactLoading from "react-loading";
 import "./App.css";
 import { AuthContext } from "./Context/AuthContext.jsx";
+import CustomMessagelist from "./CustomComponent/CustomMessageList.jsx";
 // Lazy load the components
 const CustomMessageInput = lazy(() =>
   import("./CustomComponent/CustomMessageInput.jsx")
@@ -40,7 +40,6 @@ const App = () => {
   const filters = { members: { $in: [userId] } };
   const options = { presence: true, state: true };
   const sort = { last_message_at: -1 };
-
   // useStates for handling various things
   const [open, setOpen] = useState(false);
   const [joinChannel, setJoinChannel] = useState(false);
@@ -109,6 +108,8 @@ const App = () => {
     return name;
   };
 
+  
+
   // CustomListContainer
   const CustomListContainer = (props) => {
     return (
@@ -156,7 +157,6 @@ const App = () => {
       </div>
     );
   };
-
   // Return or Render
   return (
     <Chat client={client} theme={"messaging dark"}>
@@ -255,9 +255,7 @@ const App = () => {
                     )}
                   </Suspense>
                 </div>
-                <div className="flex-grow overflow-auto hidden-scrollbar pb-[68px]">
-                  <MessageList />
-                </div>
+                <CustomMessagelist/>
                 <div className=" fixed bottom-0 w-full z-40">
                   <Suspense
                     fallback={
