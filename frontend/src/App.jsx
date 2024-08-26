@@ -227,7 +227,7 @@ const App = () => {
                     >
                       Hello
                     </button>
-                    <div className=" fixed top-0 w-full z-50  ">
+                    <div className="sticky top-0 w-full z-40  ">
                       <ChannelHeader />
                       <button
                         className="absolute z-50 top-6 right-3 text-2xl"
@@ -253,10 +253,10 @@ const App = () => {
                     />
                   )}
                 </Suspense>
-                <div className="flex-grow overflow-auto hidden-scrollbar">
+                <div className="flex-grow overflow-auto hidden-scrollbar pb-10">
                   <MessageList />
                 </div>
-                <div className="border-t border-gray-700 bg-gray-950 absolute bottom-0 w-full">
+                <div className="border-t border-gray-700 bg-gray-950 absolute bottom-0 w-full z-50">
                   <Suspense
                     fallback={
                       <div className="fixed inset-0 flex items-center justify-center">
