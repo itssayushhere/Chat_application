@@ -1,5 +1,5 @@
 import { useChatContext } from "stream-chat-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const UserInformation = ({ close, imageicon }) => {
   const { client } = useChatContext();
@@ -10,9 +10,31 @@ const UserInformation = ({ close, imageicon }) => {
     email: client?.user?.email,
     age: client?.user?.age,
   };
-
+  const [input, setInput] = useState({
+    image: user.image || "",
+    name: user.name || "",
+    username: user.username || "",
+    email: user.email || "",
+    age: user.age || "",
+  });
   const containerRef = useRef(null);
+  const [edit, setEdit] = useState(false);
 
+  const handleupdate = async () => {
+    try {
+      const updatedUser = await client.upsertUser({
+        id: client.userID,
+        name: "New User Name",
+      });
+      console.log("User updated:", updatedUser);
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  };
+
+  const handlechange = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -49,9 +71,13 @@ const UserInformation = ({ close, imageicon }) => {
                 {imageicon}
               </div>
             )}
-            <h1 className="w-8 h-8 flex items-center justify-center rounded-full bg-black text-balance font-bold font-mono text-white">
-              {user.age}
-            </h1>
+            {!edit ? (
+              <h1 className="w-8 h-8 flex items-center justify-center rounded-full bg-black text-balance font-bold font-mono text-white">
+                {user.age}
+              </h1>
+            ) : (
+                <input type="text" value={input.age} name="age" onChange={handlechange}  className="w-8 h-8 flex text-center rounded-full bg-white  font-bold font-mono text-black p-1 border border-black underline"/>
+            )}
           </div>
           <div>
             <h2 className="text-sm font-bold mb-2 italic border-b p-1 px-3 border-black w-fit rounded-md text-black">
@@ -59,7 +85,8 @@ const UserInformation = ({ close, imageicon }) => {
             </h2>
             <div className="flex gap-2 items-center">
               <h1 className="font-semibold font-mono italic">Name:</h1>
-              <h1 className="">{user.username}</h1>
+              
+              {!edit ? <h1 className="">{user.username}</h1>: <input type="text" name="username" value={input.username} onChange={handlechange}  className="w-40 bg-transparent border-b h-5 px-2 outline-none border-black rounded"/> }
             </div>
             <div className="flex items-center">
               <h1 className="font-semibold font-mono italic">Email:</h1>
@@ -67,12 +94,22 @@ const UserInformation = ({ close, imageicon }) => {
             </div>
           </div>
         </div>
-        <button
-          className="bg-red-600 text-black px-3 font-medium py-1 rounded-lg hover:bg-red-600"
-          onClick={close}
-        >
-          Close
-        </button>
+        <div className="flex gap-3">
+          <button
+            className="bg-green-500 text-black w-14 font-medium py-1 rounded-lg"
+            onClick={() => {
+              edit ? setEdit(false) : setEdit(true);
+            }}
+          >
+            {edit ? "Save" : "Edit"}
+          </button>
+          <button
+            className="bg-red-600 text-black px-3 font-medium py-1 rounded-lg hover:bg-red-600"
+            onClick={close}
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );

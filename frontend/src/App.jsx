@@ -18,7 +18,6 @@ import { FaVideo } from "react-icons/fa6";
 import ReactLoading from "react-loading";
 import "./App.css";
 import { AuthContext } from "./Context/AuthContext.jsx";
-import { TiArrowSortedUp } from "react-icons/ti";
 // Lazy load the components
 const CustomMessageInput = lazy(() =>
   import("./CustomComponent/CustomMessageInput.jsx")
@@ -228,7 +227,7 @@ const App = () => {
                     >
                       Hello
                     </button>
-                    <div className="w-full  relative">
+                    <div className=" fixed top-0 w-full z-50  ">
                       <ChannelHeader />
                       <button
                         className="absolute z-50 top-6 right-3 text-2xl"
@@ -257,7 +256,7 @@ const App = () => {
                 <div className="flex-grow overflow-auto hidden-scrollbar">
                   <MessageList />
                 </div>
-                <div className="border-t border-gray-700 bg-gray-950 sticky bottom-0 w-full">
+                <div className="border-t border-gray-700 bg-gray-950 absolute bottom-0 w-full">
                   <Suspense
                     fallback={
                       <div className="fixed inset-0 flex items-center justify-center">

@@ -1,4 +1,3 @@
-
 // Function to update channel details (name, image, description)
 export const updateChannel = async (channelName, channelImage,channel, channelDescription) => {
   try {
@@ -7,7 +6,6 @@ export const updateChannel = async (channelName, channelImage,channel, channelDe
       image: channelImage,
       description: channelDescription,
     });
-
     console.log('Channel updated successfully:', updateResponse);
   } catch (error) {
     console.error('Error updating channel:', error);
