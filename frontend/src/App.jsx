@@ -256,7 +256,7 @@ const App = () => {
                 <div className="flex-grow overflow-auto hidden-scrollbar pb-10">
                   <MessageList />
                 </div>
-                <div className="border-t border-gray-700 bg-gray-950 absolute bottom-0 w-full z-50">
+                <div className="border-t border-gray-700 bg-gray-950 fixed bottom-0 w-full z-50">
                   <Suspense
                     fallback={
                       <div className="fixed inset-0 flex items-center justify-center">
