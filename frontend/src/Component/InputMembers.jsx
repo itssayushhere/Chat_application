@@ -9,33 +9,29 @@ const InputMembers = ({ allUsers, selectedMembers, setSelectedMembers }) => {
   const handleAutoComplete = (value) => {
     setInput(value);
   };
+
   const serverMembers = allUsers.filter((m) => m.id !== "itssayushhere");
+
   const handleMembers = (value) => {
-    let data;
     const checking = serverMembers.filter((item) => item.name === value);
     if (checking.length === 0) {
       return null;
     }
-    data = serverMembers
-      .filter((item) => item.name === value)
-      .map((item) => item.id);
-    if (selectedMembers.includes(data[0])) {
-      return null;
-    } else {
+    const data = checking.map((item) => item.id);
+    if (!selectedMembers.includes(data[0])) {
       setSelectedMembers([...selectedMembers, data[0]]);
       setShowMembers([...showMembers, value]);
+      setInput(""); 
+    }else{
+      setInput("")
     }
   };
 
   const handleRemove = (value) => {
     let data;
-    if (value === "itsayushhere") {
-      data = ["itsayushhere"];
-    } else {
-      data = serverMembers
-        .filter((item) => item.name === value)
-        .map((item) => item.id);
-    }
+    data = serverMembers
+      .filter((item) => item.name === value)
+      .map((item) => item.id);
     setSelectedMembers(selectedMembers.filter((item) => item !== data[0]));
     setShowMembers(showMembers.filter((item) => item !== value));
   };
@@ -43,17 +39,20 @@ const InputMembers = ({ allUsers, selectedMembers, setSelectedMembers }) => {
   const notfilteroptions = serverMembers.map((item) => ({
     value: item.name,
   }));
-  const options = notfilteroptions.filter((item)=> item.value)
-  // console.log("option",option)
+
+  const options = notfilteroptions.filter((item) => item.value);
+
   return (
     <div className="mb-4">
       {serverMembers.length === 0 ? (
-        <h1 className="p-2  text-center text-wrap">No members left on the server to Add</h1>
+        <h1 className="p-2 text-center text-wrap">
+          No members left on the server to Add
+        </h1>
       ) : (
         <div>
           <div className="mb-2 text-sm font-medium items-center text-gray-700 flex">
-            <h1 className="" >Selected:</h1>
-            <div className="flex w-full flex-wrap">
+            <h1 className="text-black">Selected:</h1>
+            <div className=" flex w-72 flex-wrap ">
               {showMembers.map((item, index) => (
                 <div
                   key={index}
@@ -79,6 +78,8 @@ const InputMembers = ({ allUsers, selectedMembers, setSelectedMembers }) => {
                 -1
               }
               onChange={handleAutoComplete}
+              onPressEnter={() => handleMembers(input)} // Handle Enter key press
+              value={input} // Bind the input state to the AutoComplete component
               className="w-full"
             />
             <button

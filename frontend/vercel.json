@@ -1,0 +1,20 @@
+{
+    "redirects": [
+      {
+        "source": "/chatapp",
+        "destination": "/",
+        "statusCode": 200
+      },
+      {
+        "source": "/register",
+        "destination": "/",
+        "statusCode": 200
+      },
+      {
+        "source": "/",
+        "destination": "/",
+        "statusCode": 200
+      }
+    ]
+  }
+  

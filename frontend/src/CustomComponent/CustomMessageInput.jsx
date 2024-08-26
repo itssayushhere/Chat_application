@@ -51,14 +51,14 @@ const AttachmentActions = ({ attachment, type }) => {
     children = (
       <div className="flex gap-1 w-full mx-auto p-1">
         <a
-          className="bg-white"
+          className=""
           href={attachment.url}
           target="_blank"
           rel="noreferrer"
         >
           📥
         </a>
-        <button className=" bg-white" onClick={() => remove(attachment.id)}>
+        <button className=" " onClick={() => remove(attachment.id)}>
           ❌
         </button>
       </div>
@@ -117,7 +117,8 @@ const ImageAttachmentPreview = ({ id }) => {
   const url = image.previewUri ?? image.url ?? "fallback.webm";
 
   return (
-    <div
+    <div className="w-fit flex flex-col items-center  justify-center border-2 border-black p-2">
+    {/* <div
       className="w-full  "
       style={{
         backgroundImage: `url(${url})`,
@@ -128,9 +129,11 @@ const ImageAttachmentPreview = ({ id }) => {
         backgroundRepeat: "no-repeat", // Prevent the image from repeating
       }}
       aria-label={image.file.name}
-    >
+      >
+    </div> */}
+    <img src={url} alt={image.file.name} className="h-20 w-20 object-cover overflow-hidden" />
       <AttachmentActions attachment={image} type="image" />
-    </div>
+      </div>
   );
 };
 
@@ -140,7 +143,7 @@ const FileAttachmentPreview = ({ id }) => {
   const attachment = fileUploads[id];
 
   return (
-    <div className="">
+    <div className="p-2">
       📄 {attachment.file.name} <br />({attachment.file.size} bytes)
       <AttachmentActions attachment={attachment} type="file" />
     </div>
@@ -175,7 +178,7 @@ const CustomMessageInput = () => {
 
 
   return (
-    <div className="w-full ">
+    <div className="w-full bg-black  rounded">
       <CustomLinkPreviewList />
       <div className=" flex   gap-4 ">
         {Object.keys(imageUploads).map((id) => (
@@ -193,17 +196,17 @@ const CustomMessageInput = () => {
           rows={1}
           value={text}
           ref={textareaRef}
-          className={`w-full p-3 px-10 rounded-lg hidden-scrollbar bg-black bg-opacity-25 border-2 border-white border-opacity-20 text-white focus:outline-none`}
+          className={`w-full p-3 px-10 rounded-lg hidden-scrollbar bg-black bg-opacity-100  text-white  focus:outline-none`}
           onKeyDown={handleKeyDown}
           onChange={handleChange}
           placeholder="Type your message..."
         />
         <button
           type="button"
-          className="p-3 mr-2 absolute right-0 bottom-3 z-50 "
+          className="p-3 mr-2 absolute right-0 bottom-2 z-50 "
           onClick={handleSubmit}
         >
-          <IoSendOutline />
+          <IoSendOutline className="text-blue-500 text-lg" />
         </button>
       </div>
     </div>

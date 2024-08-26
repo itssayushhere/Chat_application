@@ -112,7 +112,7 @@ const App = () => {
   // CustomListContainer
   const CustomListContainer = (props) => {
     return (
-      <div className="w-full h-full flex flex-col items-center justify-between">
+      <div className="w-full h-full flex flex-col items-center justify-between relative">
         <div>
           <header className="flex p-2 px-10 shadow-md border-2 border-black rounded-md mx-1 my-2 text-white bg-blue-600 font-mono font-bold shadow-black">
             <div className="flex items-center space-x-2">
@@ -122,7 +122,7 @@ const App = () => {
               </h1>
             </div>
           </header>
-          <div className="flex flex-col sm:h-[650px] h-[540px] overflow-y-scroll hidden-scrollbar">
+          <div className="flex flex-col sm:h-[650px] h-[540px] overflow-y-scroll hidden-scrollbar ">
             <div>{props.children}</div>
             <div className="p-2 flex flex-col items-center justify-center text-2xl">
               <button type="button" onClick={() => setJoinChannel(true)}>
@@ -131,7 +131,7 @@ const App = () => {
             </div>
           </div>
         </div>
-        <div className="w-full flex items-center justify-between p-2 py-3">
+        <div className="w-full  flex items-center justify-between p-2 py-3 absolute bottom-0">
           <button
             className="p-2 text-xs border-2 border-black font-bold font-mono rounded-lg bg-blue-600 text-white shadow-sm shadow-black"
             onClick={handleLogout}
@@ -233,30 +233,32 @@ const App = () => {
                         className="absolute z-50 top-6 right-3 text-2xl"
                         onClick={() => setVideoCallState(true)}
                       >
-                        <FaVideo className="text-blue-700"/>
+                        <FaVideo className="text-blue-700" />
                       </button>
                     </div>
                   </div>
                 </div>
-                <Suspense
-                  fallback={
-                    <div className="fixed inset-0 flex items-center justify-center">
-                      <ReactLoading color="white" type="spin" />
-                    </div>
-                  }
-                >
-                  {open && (
-                    <ChannelInfo
-                      close={() => setOpen(false)}
-                      user={client?.user?.id}
-                      data={alluser}
-                    />
-                  )}
-                </Suspense>
-                <div className="flex-grow overflow-auto hidden-scrollbar pb-10">
+                <div className="z-50">
+                  <Suspense
+                    fallback={
+                      <div className="fixed inset-0 flex items-center justify-center">
+                        <ReactLoading color="white" type="spin" />
+                      </div>
+                    }
+                  >
+                    {open && (
+                      <ChannelInfo
+                        close={() => setOpen(false)}
+                        user={client?.user?.id}
+                        data={alluser}
+                      />
+                    )}
+                  </Suspense>
+                </div>
+                <div className="flex-grow overflow-auto hidden-scrollbar pb-[68px]">
                   <MessageList />
                 </div>
-                <div className="border-t border-gray-700 bg-gray-950 fixed bottom-0 w-full z-50">
+                <div className=" fixed bottom-0 w-full z-40">
                   <Suspense
                     fallback={
                       <div className="fixed inset-0 flex items-center justify-center">
