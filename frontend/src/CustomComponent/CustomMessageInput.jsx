@@ -181,11 +181,11 @@ const CustomMessageInput = () => {
     <div className="w-full  rounded">
       <CustomLinkPreviewList />
       <div className=" flex   gap-4 ">
-        {Object.keys(imageUploads).map((id) => (
-          <ImageAttachmentPreview key={id} id={id} />
+        {Object.keys(imageUploads).map((id,index) => (
+          <ImageAttachmentPreview key={index} id={id} />
         ))}
-        {Object.keys(fileUploads).map((id) => (
-          <FileAttachmentPreview key={id} id={id} />
+        {Object.keys(fileUploads).map((id,index) => (
+          <FileAttachmentPreview key={index} id={id} />
         ))}
       </div>
       <div className="w-full flex p-2 relative  items-center">
