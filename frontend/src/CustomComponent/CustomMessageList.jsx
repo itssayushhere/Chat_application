@@ -4,7 +4,7 @@ import { MessageList, useChannelStateContext } from "stream-chat-react";
 const CustomMessagelist = (props) => {
   const messageListRef = useRef(null);
   const { messages } = useChannelStateContext();
-  const height = messageListRef?.current?.scrollHeight - 15;
+  const height = messageListRef?.current?.scrollHeight -700;
   useEffect(() => {
     const scrollToBottom = () => {
       if (messageListRef.current) {
