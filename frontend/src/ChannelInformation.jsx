@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useChannelStateContext, useMessageContext } from "stream-chat-react";
+import { useChannelStateContext } from "stream-chat-react";
 import { useState } from "react";
 import ReactLoading from "react-loading";
 import uploadCloudinary from "./utils/uploadCloudinary.js";
