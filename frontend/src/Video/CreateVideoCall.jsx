@@ -117,6 +117,11 @@ const CreateVideoCall = ({ apiKey, user, token, closeApp }) => {
             video: true,
           },
         });
+        await channel.sendMessage({
+          text: `Video call started `,
+          customType: 'video_call',
+          callID: callID,
+        });
       } catch (error) {
         console.error("Error joining the call:", error);
       }
